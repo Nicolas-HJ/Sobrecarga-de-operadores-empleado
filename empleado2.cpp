@@ -72,7 +72,7 @@ istream& operator>>(istream& i, Empleado& p)       //Operador >>
     return i;
 
 }
-float Empleado::operator+(const Empleado& p)     //Operador + Empleado(0," "," ",sueldototal, " ");
+float Empleado::operator+(const Empleado& p)     //Operador + 
 {
    return Sueldo + p.Sueldo;
 }
