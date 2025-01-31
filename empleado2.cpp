@@ -12,51 +12,21 @@ private:
     string JefeReporta;
 public:
     Empleado(int, string, string, float, string);
+    void imprime();
     void CambiaDomicilio(string);
     void CambiaReporta(string);
     void ActualSueldo(float);
-
-    // Sobrecarga del operador ==
-    bool operator==(const Empleado& otro) const {
-        return ClaveEmpleado == otro.ClaveEmpleado;
-    }
-
-    // Sobrecarga del operador !=
-    bool operator!=(const Empleado& otro) const {
-        return ClaveEmpleado != otro.ClaveEmpleado;
-    }
-
-    // Sobrecarga del operador <
-    bool operator<(const Empleado& otro) const {
-        return ClaveEmpleado < otro.ClaveEmpleado;
-    }
-
-    // Sobrecarga del operador >
-    bool operator>(const Empleado& otro) const {
-        return ClaveEmpleado > otro.ClaveEmpleado;
-    }
-
-    // Sobrecarga del operador +
-    Empleado operator+(const Empleado& otro) const {
-        return Empleado(ClaveEmpleado, Nombre + otro.Nombre, Domicilio, Sueldo, JefeReporta);
-    }
-
-    // Sobrecarga del operador >>
-    friend istream& operator>>(istream& input, Empleado& empleado) {
-        input >> empleado.ClaveEmpleado >> empleado.Nombre >> empleado.Domicilio >> empleado.Sueldo >> empleado.JefeReporta;
-        return input;
-    }
-
-    // Sobrecarga del operador <<
-    friend ostream& operator<<(ostream& output, const Empleado& empleado) {
-        output << "Empleado: " << empleado.Nombre << endl
-               << "Clave: " << empleado.ClaveEmpleado << endl
-               << "Sueldo: " << empleado.Sueldo << endl
-               << "Domicilio: " << empleado.Domicilio << endl
-               << "Jefe: " << empleado.JefeReporta << endl;
-        return output;
-    }
+    friend ostream& operator<<(ostream& os, const Empleado& p);
+    friend istream& operator>>(istream& i,  Empleado& p);
+    float operator+(const Empleado& p);
+    float operator-(const Empleado& p);
+    bool operator==(const Empleado& p) const;
+    bool operator!=(const Empleado& p) const;
+    bool operator<(const Empleado& e) const;
+    bool operator>(const Empleado& e) const;
 };
+
+
 Empleado::Empleado(int _ClaveEmpleado, string _Nombre, string _Domicilio, float _Sueldo, string _JefeReporta)
 {
     ClaveEmpleado=_ClaveEmpleado;
@@ -84,6 +54,55 @@ void Empleado::ActualSueldo(float sueldo)
     cout<<"Cambio de sueldo exitoso"<<endl;
     getch();
 }
+
+
+ostream& operator<<(ostream& os, const Empleado& p) //Operador <<
+{
+    os << "Clave: " << p.ClaveEmpleado << endl;
+    os << "Nombre: " << p.Nombre << endl;
+    os << "Domicilio: " << p.Domicilio << endl;
+    os << "Sueldo: " << p.Sueldo << endl;
+    os << "Jefe Reporta: " << p.JefeReporta << endl;
+    return os;
+}
+istream& operator>>(istream& i, Empleado& p)       //Operador >>
+{
+    cout<<"Introdusca el nuevo domicilio: ";
+    i>>p.Domicilio;
+    return i;
+
+}
+float Empleado::operator+(const Empleado& p)     //Operador + Empleado(0," "," ",sueldototal, " ");
+{
+   return Sueldo + p.Sueldo;
+}
+float Empleado::operator-(const Empleado& p)     //Operador -
+{
+    return Sueldo - p.Sueldo;
+
+}
+bool Empleado::operator==(const Empleado& p) const //Operador ==
+{
+    return (ClaveEmpleado == p.ClaveEmpleado &&
+            Nombre == p.Nombre &&
+            Domicilio == p.Domicilio &&
+            Sueldo == p.Sueldo &&
+            JefeReporta == p.JefeReporta);
+}
+bool Empleado::operator!=(const Empleado& p) const //Operadro !=
+{
+    return (ClaveEmpleado != p.ClaveEmpleado &&
+            Nombre != p.Nombre &&
+            Domicilio != p.Domicilio &&
+            Sueldo != p.Sueldo &&
+            JefeReporta != p.JefeReporta);
+}
+bool Empleado::operator<(const Empleado& e) const {     //Operador <
+    return Sueldo < e.Sueldo;
+}
+bool Empleado::operator>(const Empleado& e) const {     //Operador >
+    return Sueldo > e.Sueldo;
+}
 enum Menu
 {
     OPC_CAMBIARDOMICILIO =1,
@@ -96,9 +115,13 @@ int opc=0, clave=0;
 int main()
 {
     system("color 70");
-    Empleado jefeplanta(01,"Nicolas", "San Mateo #246", 1300, "Junior");
-    Empleado jefepersonal(02,"Angel", "San Antonio #316", 1250, "Jaime");
+    Empleado jefeplanta(1,"Nicolas", "San Mateo #246", 1300, "Junior");
+    Empleado jefepersonal(2,"Angel", "San Antonio #316", 1250, "Jaime");
 
+    cout<<jefepersonal+jefeplanta<<endl;
+    cout<<jefepersonal-jefeplanta;
+
+    getch();
     do
     {
         fflush(stdin);
@@ -118,15 +141,13 @@ int main()
             cin.ignore();
             if(clave==01)
             {
-                cout<<"Clave correcta"<<endl<<"Introduzca el nuevo domicilio:"<<endl;
-                getline(cin, nuevo_domicilio);
-                jefeplanta.CambiaDomicilio(nuevo_domicilio);
+                cout<<"Clave correcta"<<endl;
+                cin>>jefeplanta;
             }
             else if(clave==02)
             {
-                cout<<"Clave correcta"<<endl<<"Introduzca el nuevo domicilio:"<<endl;
-                getline(cin, nuevo_domicilio);
-                jefepersonal.CambiaDomicilio(nuevo_domicilio);
+                cout<<"Clave correcta"<<endl;
+                cin>>jefepersonal;
             }
             else
             {
